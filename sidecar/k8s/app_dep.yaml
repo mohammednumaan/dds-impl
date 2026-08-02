@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: toy-app
+  template:
+    metadata:
+      labels:
+        app: toy-app
+    spec:
+      shareProcessNamespace: true
+      containers:
+        - name: toy-app
+          image: toy-app:latest
+          imagePullPolicy: IfNotPresent
+          args:
+            - "--config-file=/shared/config.json"
+            - "--pid-file=/shared/app.pid"
+            - "--startup-wait=30s"
+          volumeMounts:
+            - name: shared-volume
+              mountPath: /shared
+        - name: sidecar
+          image: sidecar:latest
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: shared-volume
+              mountPath: /shared
+          args:
+            - "--server-url=http://configserver:8080/config"
+            - "--config-file=/shared/config.json"
+            - "--pid-file=/shared/app.pid"
+            - "--poll-interval=5s"
+      volumes:
+        - name: shared-volume
+          emptyDir: {}

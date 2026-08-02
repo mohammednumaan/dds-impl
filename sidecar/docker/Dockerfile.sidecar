@@ -1,0 +1,15 @@
+ARG GO_VERSION=1.26.2
+
+FROM golang:${GO_VERSION}-alpine AS build
+WORKDIR /src
+
+COPY go.mod ./
+COPY cmd/sidecar ./cmd/sidecar
+RUN go build -o /out/sidecar ./cmd/sidecar
+
+FROM alpine:3.20
+WORKDIR /app
+
+COPY --from=build /out/sidecar /usr/local/bin/sidecar
+
+ENTRYPOINT ["sidecar"]

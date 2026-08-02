@@ -1,0 +1,16 @@
+ARG GO_VERSION=1.26.2
+
+FROM golang:${GO_VERSION}-alpine AS build
+WORKDIR /src
+
+COPY go.mod ./
+COPY cmd/config_server ./cmd/config_server
+RUN go build -o /out/config-server ./cmd/config_server
+
+FROM alpine:3.20
+WORKDIR /app
+
+COPY --from=build /out/config-server /usr/local/bin/config-server
+
+EXPOSE 8080
+ENTRYPOINT ["config-server"]
