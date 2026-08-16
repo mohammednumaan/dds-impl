@@ -1,0 +1,15 @@
+FROM golang:1.26 AS build-stage
+WORKDIR /app
+
+COPY go.mod ./
+COPY cmd ./cmd
+
+RUN CGO_ENABLED=0 GOOS=linux go build -o /out/beta_server ./cmd/beta_server
+
+FROM gcr.io/distroless/static-debian12
+
+COPY --from=build-stage /out/beta_server /beta_server
+
+EXPOSE 8091
+
+ENTRYPOINT ["/beta_server"]

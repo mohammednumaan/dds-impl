@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-with-ambassador
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: client-with-ambassador
+  template:
+    metadata:
+      labels:
+        app: client-with-ambassador
+    spec:
+      containers:
+        - name: client
+          image: ambassador-client:local
+          imagePullPolicy: Never
+          args:
+            - "-proxy=http://localhost:8092/"
+            - "-interval=1s"
+        - name: ambassador
+          image: ambassador-proxy:local
+          imagePullPolicy: Never
+          args:
+            - "-prod=http://prod-server:8090"
+            - "-beta=http://beta-server:8091"
+            - "-nsplit=20"
+          ports:
+            - containerPort: 8092

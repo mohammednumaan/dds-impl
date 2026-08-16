@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prod-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prod-server
+  template:
+    metadata:
+      labels:
+        app: prod-server
+    spec:
+      containers:
+        - name: prod-server
+          image: ambassador-prod:local
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8090
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prod-server
+spec:
+  selector:
+    app: prod-server
+  ports:
+    - name: http
+      port: 8090
+      targetPort: 8090
