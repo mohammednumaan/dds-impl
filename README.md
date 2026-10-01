@@ -11,3 +11,6 @@ implementations of patterns and concepts from dds by brendan burns
 
 1. [`ambassador pattern`](./ambassador/) 
    - ambassador proxy that splits client requests between stable prod and beta servers, forwarding each request to the selected upstream based on a configurable percentage.
+
+1. [`replicated-lb`](./replicated-lb/)
+   - replicated load balancer that spreads client requests across identical app replicas, forwarding each request to the next replica in round-robin order.
