@@ -14,3 +14,6 @@ implementations of patterns and concepts from dds by brendan burns
 
 1. [`replicated-lb`](./replicated-lb/)
    - replicated load balancer that spreads client requests across identical app replicas, forwarding each request to the next replica in round-robin order.
+
+1. [`sharding`](./sharding/)
+   - sharded key-value store that spreads keys across distinct shards, hashing each request key to pick the shard that owns it.
