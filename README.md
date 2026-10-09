@@ -17,3 +17,6 @@ implementations of patterns and concepts from dds by brendan burns
 
 1. [`sharding`](./sharding/)
    - sharded key-value store that spreads keys across distinct shards, hashing each request key to pick the shard that owns it.
+
+1. [`scatter-gather`](./scatter-gather/)
+   - scattered key-value read that fans a full-read request out to all shards concurrently and merges their maps, while single-key reads and writes still hash to one shard.
